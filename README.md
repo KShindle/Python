@@ -1,2 +1,2 @@
 # Python
-Python scripts I've worked on
+A Place for scripts as I develop my knowledge of Python
