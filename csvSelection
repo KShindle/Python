@@ -1,0 +1,44 @@
+
+
+# Code snippet for selecting features in a feature class in ArcMap or ArcPro
+# This is for any feature that is showing in the current map document
+#Code written originally for Python 2.7, but works well in Python 3
+
+# This is designed for CSV files
+#Have a csv with the features you want to select in the first column
+# Do not use column headers in your CSV
+
+#Update the following variables:
+# workspace (place where you have your CSV)
+# selList (or just make sure you name your csv 'selection')
+# featureClass (name of your feature class shown in the table of contents, fill in between quotes)
+#field (the text/string field you want to query [name, not alias])
+
+#originally written to select a list of parcels based on their assigned UPI (works on ArcMap parcel fabric)
+
+import csv, os, arcpy
+workspace = 'S:\FC GIS\Scripts'
+selList = "selection.csv"
+featureClass = r"Parcel Fabric\Parcels"
+field = "Name"   
+
+#####################################################
+#           Don't edit below this line             #
+####################################################
+
+#This creates a reader that makes a list based on your CSV
+csvRead = open(os.path.join(workspace, selList), 'r')
+
+with csvRead as r:
+	csvList = []
+	reader = csv.reader(r, delimiter = ',')
+	for row in reader:
+		feature = row[0]  #pulls the feature attribute from the first column in your csv
+		csvList.append(feature) 
+    
+for x in csvList:
+	selection = '"' + field + '"' + " = '" + x + "'"
+	arcpy.SelectLayerByAttribute_management(featureClass, "ADD_TO_SELECTION", selection)
+print("Selection Completed")
+
+del selList, csvRead, csvList
